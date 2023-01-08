@@ -7,11 +7,12 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(features = {"features"},
         glue = {"steps"},
-        plugin = {"pretty", "html:Report1.html", "json:Report2.json", "junit:Report3.xml"},
-        dryRun = true,
+        plugin = {"pretty", "html:target/reports/Report1.html", "json:target/reports/Report2.json", "junit:target/reports/Report3.xml"},
+        dryRun = false,
         monochrome = true,
-        tags = "@P1 or @P24",
-        name = {"Logo"})
+        name = {"Home", "Advanced", "iPhone"},
+        tags = "@Home or @Advanced or @iPhone"
+)
 public class TestRunner {
 
 }

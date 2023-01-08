@@ -1,8 +1,8 @@
 
   Feature: Ebay Advanced Search Page
 
-    @P24
-    Scenario: Ebay Logo on Advanced Search Page
+    @Advanced
+    Scenario: Navigating from Advanced Search page to Home
 
       Given I am on Ebay Advanced Search Page
       When I click on Ebay Logo
