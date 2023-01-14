@@ -10,9 +10,9 @@ import org.junit.runner.RunWith;
         plugin = {"pretty", "html:target/reports/Report1.html", "json:target/reports/Report2.json", "junit:target/reports/Report3.xml"},
         dryRun = false,
         monochrome = true,
-        name = {"Home", "Advanced", "iPhone"},
-        tags = "@Home or @Advanced or @iPhone"
-)
+//        name = {"Home", "Advanced", "iPhone", "Category"},
+//        tags = "@Home or @Advanced or @setCookies"
+        tags = "@setCookies")
 public class TestRunner {
 
 }
