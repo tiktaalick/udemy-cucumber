@@ -9,7 +9,7 @@ public class CommonSteps {
 
     private WebDriver driver;
 
-    public WebDriver driver() {
+    public WebDriver getDriver() {
         return driver;
     }
 

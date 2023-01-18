@@ -1,42 +1,44 @@
 package steps;
 
+import actions.CommonActions;
+import actions.EbayHomeActions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import static org.junit.Assert.fail;
 
 public class EbayHomeSteps {
 
-    private WebDriver driver;
-    private int       version;
+    private final CommonActions   commonActions;
+    private final EbayHomeActions ebayHomeActions;
 
-    public EbayHomeSteps(CommonSteps commonSteps) {
-        this.driver = commonSteps.driver();
+    private int version;
+
+    public EbayHomeSteps(CommonActions commonActions, EbayHomeActions ebayHomeActions) {
+        this.commonActions = commonActions;
+        this.ebayHomeActions = ebayHomeActions;
     }
 
     @Given("I am on Ebay Home page")
     public void iAmOnEbayHomePage() {
-        driver.get("https://www.ebay.com/");
+        commonActions.goToUrl("https://www.ebay.com/");
     }
 
     @When("I click on Advanced Link")
     public void iClickOnAdvancedLink() {
-        driver.findElement(By.linkText("Advanced")).click();
+        ebayHomeActions.clickAdvancedLink();
     }
 
     @When("I click on {string}")
-    public void iClickOnLink(String category) throws InterruptedException {
-        driver.findElement(By.linkText(category)).click();
+    public void iClickOnLink(String category) {
+        ebayHomeActions.clickOnLinkByText(category);
     }
 
     @Then("I navigate to Advanced Search page")
     public void iNavigateToAdvancedSearchPage() {
         String expected = "https://www.ebay.com/sch/ebayadvsearch";
-        String actual = driver.getCurrentUrl();
+        String actual = commonActions.getCurrentPageUrl();
 
         if (!expected.equals(actual)) {
             fail("I did NOT navigate to the Advanced Search page (" + expected + "), but to " + actual + " instead.");
@@ -45,29 +47,22 @@ public class EbayHomeSteps {
 
     @When("I search for {string} {int}")
     public void iSearchForIPhone(String searchString, int version) {
-        driver.findElement(By.xpath("//input[@id='gh-ac']")).sendKeys(searchString + " " + version);
-        driver.findElement(By.xpath("//input[@id='gh-btn']")).click();
+        ebayHomeActions.searchItem(searchString + " " + version);
+        ebayHomeActions.clickSearchButton();
 
         this.version = version;
     }
 
     @When("I search for {string} in {string} category")
-    public void iSearchForSoapInBabyCategory(String searchString, String category) throws InterruptedException {
-        driver.findElement(By.xpath("//input[@id='gh-ac']")).sendKeys(searchString);
-        driver
-                .findElements(By.xpath("//select[@id='gh-cat']/option"))
-                .stream()
-                .filter(dropDownListBoxOption -> dropDownListBoxOption.getText().trim().equalsIgnoreCase(category.trim()))
-                .findAny()
-                .ifPresent(WebElement::click);
-
-        driver.findElement(By.xpath("//input[@id='gh-btn']")).click();
+    public void iSearchForSoapInBabyCategory(String searchString, String category) {
+        ebayHomeActions.searchItem(searchString);
+        ebayHomeActions.selectCategoryOption(category);
+        ebayHomeActions.clickSearchButton();
     }
 
     @Then("I validate at least {int} search items are present")
     public void iValidateAtLeastSearchItemsArePresent(int expected) {
-        String text = driver.findElement(By.cssSelector("h1.srp-controls__count-heading>span.BOLD:first-child")).getText();
-        int actual = Integer.parseInt(text.replaceAll(",", "").trim());
+        int actual = ebayHomeActions.getSearchItemsCount();
 
         if (actual < expected) {
             fail("There were only " + actual + " iPhone " + version + "'s, which is a smaller number than " + expected + ".");
@@ -76,8 +71,8 @@ public class EbayHomeSteps {
 
     @Then("I validate that page navigates to {string} and title contains {string}")
     public void iValidateThatPageNavigatesToUrlAndTitleContainsTitle(String expectedUrl, String expectedTitle) {
-        String actualUrl = driver.getCurrentUrl();
-        String actualTitle = driver.getTitle();
+        String actualUrl = commonActions.getCurrentPageUrl();
+        String actualTitle = commonActions.getCurrentPageTitle();
 
         if (!actualUrl.equals(expectedUrl)) {
             fail("The page navigated to " + actualUrl + " instead of page " + expectedUrl + ".");
