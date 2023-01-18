@@ -43,10 +43,10 @@ Feature: Ebay Home Page Scenarios
     Then I validate at least 1000 search items are present
 
   @ThisTestFails
-#  Scenario: Count the number of iPhones
-#    Given I am on Ebay Home page
-#    When I search for 'iPhone' 17
-#    Then I validate at least 1000 search items are present
+  Scenario: Count the number of iPhones
+    Given I am on Ebay Home page
+    When I search for 'iPhone' 17
+    Then I validate at least 1000 search items are present
 
   @Category @setCookies @iPhone
   Scenario: Search an item in category
